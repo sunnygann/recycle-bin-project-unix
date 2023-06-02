@@ -1,0 +1,30 @@
+#!/bin/bash
+
+##############################
+#
+# Name: Sunny Gan
+# Restore Basic Functionality
+#
+##############################
+
+if [ $# = 0 ]
+then
+        echo No file provided. Please provide a file to be restored.
+        exit 1
+fi
+
+if [ -e $HOME/recyclebin/$1 ]
+then
+        originalPath=$(grep $1 $HOME/.restore_info | cut -d ':' -f 2)
+        read -p "Do you want to overwrite? y/n " ans
+        if [[ $ans =~ ^[yY].* ]]
+        then
+                mv $HOME/recyclebin/$1 $originalPath
+                invert=$(grep -v $1 $HOME/.restore_info)
+                echo $invert > $HOME/.restore_info
+        else
+                echo Permission not granted.
+        fi
+else
+        echo File does not exist. Please provide a valid file to be restored.
+fi
