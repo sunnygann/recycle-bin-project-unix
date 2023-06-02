@@ -1,0 +1,37 @@
+#!/bin/bash
+##############################
+#
+# Name: Sunny Gan
+# Recycle Basic Functionality
+#
+##############################
+
+if [ $# = 0 ] # Check if any user arguments entered.
+then
+        echo Please provide a file to be recycled.
+        exit 1
+fi
+
+if [ -e $1 ] # Check if file/dir provided exists.
+then
+        if [ -f $1 ] # Check if input is a file.
+        then
+                scriptiNode=$(ls -i $0 | cut -d " " -f 1)
+                fileiNode=$(ls -i $1 | cut -d " " -f 1)
+                if [ $scriptiNode != $fileiNode ] # Check if input is recycle script.
+                then
+                        mkdir $HOME/recyclebin 2> /dev/null # Make recycle bin directory.
+                        touch $HOME/.restore_info 2> /dev/null # Make restore info file.
+                        filePath=$(realpath $1)
+                        fileName=$(basename $1)
+                        recycleFormat=${fileName}_${fileiNode}
+                        mv $1 $HOME/recyclebin/$recycleFormat # Move input file to recycle bin directory.
+                        echo ${recycleFormat}:${filePath} >> $HOME/.restore_info # Append info to restore info.
+                        else
+                        echo Attempting to delete recycle - operation aborted.
+                fi
+        else
+                echo Cannot recycle directories. Please provide a file to be recycled.
+        fi
+else
+        echo File does not exist. Please provide a file to be recycled.
